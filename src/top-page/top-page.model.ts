@@ -8,13 +8,16 @@ export enum TopLevelCategory {
   Products,
 }
 
-export class HHData {
+export class HhData {
   @prop()
   count: number;
+
   @prop()
   juniorSalary: number;
+
   @prop()
   middleSalary: number;
+
   @prop()
   seniorSalary: number;
 }
@@ -22,6 +25,7 @@ export class HHData {
 export class TopPageAdvantage {
   @prop()
   title: string;
+
   @prop()
   description: string;
 }
@@ -43,8 +47,8 @@ export class TopPageModel extends TimeStamps {
   @prop()
   category: string;
 
-  @prop({ type: () => HHData })
-  hh?: HHData;
+  @prop({ type: () => HhData })
+  hh?: HhData;
 
   @prop({ type: () => [TopPageAdvantage] })
   advantages: TopPageAdvantage[];
