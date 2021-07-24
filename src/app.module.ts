@@ -1,12 +1,16 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ProductsController } from './products/products.controller';
-import { ProductsService } from './products/products.service';
 import { ProductsModule } from './products/products.module';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
-  imports: [ProductsModule],
+  imports: [
+    ProductsModule,
+    MongooseModule.forRoot(
+      `mongodb+srv://nikolai:qwertyuiop@cluster0.ya4dq.mongodb.net/products?retryWrites=true&w=majority`,
+    ),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
