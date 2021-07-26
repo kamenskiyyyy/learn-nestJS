@@ -4,5 +4,7 @@
   "port": 5433,
   "username": "mediumclone",
   "password": "123",
-  "database": "mediumclone"
+  "database": "mediumclone",
+  "entities": ["dist/**/*.entity{.ts,.js}"],
+  "synchronize": true
 }
