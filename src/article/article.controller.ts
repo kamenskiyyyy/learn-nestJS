@@ -31,6 +31,15 @@ export class ArticleController {
     return await this.articleService.findAll(currentUserId, query);
   }
 
+  @Get('feed')
+  @UseGuards(AuthGuard)
+  async getFeed(
+    @User('id') currenUserId: number,
+    @Query() query: any,
+  ): Promise<ArticlesResponseInterface> {
+    return await this.articleService.getFeed(currenUserId, query);
+  }
+
   @Post()
   @UseGuards(AuthGuard)
   @UsePipes(new ValidationPipe())
