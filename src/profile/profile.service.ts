@@ -49,7 +49,7 @@ export class ProfileService {
 
     if (currentUserId === user.id) {
       throw new HttpException(
-        'Follower and following cant be equal',
+        'Follower and Following cant be equal',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -83,7 +83,7 @@ export class ProfileService {
 
     if (currentUserId === user.id) {
       throw new HttpException(
-        'Follower and following cant be equal',
+        'Follower and Following cant be equal',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -98,8 +98,6 @@ export class ProfileService {
 
   buildProfileResponse(profile: ProfileType): ProfileResponseInterface {
     delete profile.email;
-    return {
-      profile,
-    };
+    return { profile };
   }
 }

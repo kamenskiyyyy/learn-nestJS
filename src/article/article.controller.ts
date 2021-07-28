@@ -9,7 +9,6 @@ import {
   Query,
   UseGuards,
   UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { ArticleService } from '@app/article/article.service';
 import { AuthGuard } from '@app/user/guards/auth.guard';
@@ -18,6 +17,7 @@ import { User } from '@app/user/decorators/user.decorator';
 import { CreateArticleDto } from '@app/article/dto/createArticle.dto';
 import { ArticleResponseInterface } from '@app/article/types/articleResponse.interface';
 import { ArticlesResponseInterface } from '@app/article/types/articlesResponse.interface';
+import { BackendValidationPipe } from '@app/shared/pipes/backendValidation.pipe';
 
 @Controller('articles')
 export class ArticleController {
@@ -34,15 +34,15 @@ export class ArticleController {
   @Get('feed')
   @UseGuards(AuthGuard)
   async getFeed(
-    @User('id') currenUserId: number,
+    @User('id') currentUserId: number,
     @Query() query: any,
   ): Promise<ArticlesResponseInterface> {
-    return await this.articleService.getFeed(currenUserId, query);
+    return await this.articleService.getFeed(currentUserId, query);
   }
 
   @Post()
   @UseGuards(AuthGuard)
-  @UsePipes(new ValidationPipe())
+  @UsePipes(new BackendValidationPipe())
   async create(
     @User() currentUser: UserEntity,
     @Body('article') createArticleDto: CreateArticleDto,
@@ -73,12 +73,12 @@ export class ArticleController {
 
   @Put(':slug')
   @UseGuards(AuthGuard)
-  @UsePipes(new ValidationPipe())
+  @UsePipes(new BackendValidationPipe())
   async updateArticle(
     @User('id') currentUserId: number,
     @Param('slug') slug: string,
     @Body('article') updateArticleDto: CreateArticleDto,
-  ): Promise<ArticleResponseInterface> {
+  ) {
     const article = await this.articleService.updateArticle(
       slug,
       updateArticleDto,
@@ -102,11 +102,11 @@ export class ArticleController {
 
   @Delete(':slug/favorite')
   @UseGuards(AuthGuard)
-  async deleteArticleToFavorites(
+  async deleteArticleFromFavorites(
     @User('id') currentUserId: number,
     @Param('slug') slug: string,
   ): Promise<ArticleResponseInterface> {
-    const article = await this.articleService.deleteArticleToFavorites(
+    const article = await this.articleService.deleteArticleFromFavorites(
       slug,
       currentUserId,
     );

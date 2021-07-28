@@ -72,19 +72,20 @@ export class ArticleService {
     queryBuilder.orderBy('articles.createdAt', 'DESC');
     const articlesCount = await queryBuilder.getCount();
     const articles = await queryBuilder.getMany();
-    const articlesWithFavorites = articles.map((article) => {
+    const articlesWithFavorited = articles.map((article) => {
       const favorited = favoriteIds.includes(article.id);
       return { ...article, favorited };
     });
-    return { articles: articlesWithFavorites, articlesCount };
+
+    return { articles: articlesWithFavorited, articlesCount };
   }
 
   async getFeed(
-    currenUserId: number,
+    currentUserId: number,
     query: any,
   ): Promise<ArticlesResponseInterface> {
     const follows = await this.followRepository.find({
-      followerId: currenUserId,
+      followerId: currentUserId,
     });
 
     if (follows.length === 0) {
@@ -161,17 +162,19 @@ export class ArticleService {
 
   async addArticleToFavorites(
     slug: string,
-    currentUserId: number,
+    userId: number,
   ): Promise<ArticleEntity> {
     const article = await this.findBySlug(slug);
-    const user = await this.userRepository.findOne(currentUserId, {
+    const user = await this.userRepository.findOne(userId, {
       relations: ['favorites'],
     });
-    const isNotFavorite =
+
+    const isNotFavorited =
       user.favorites.findIndex(
         (articleInFavorites) => articleInFavorites.id === article.id,
       ) === -1;
-    if (isNotFavorite) {
+
+    if (isNotFavorited) {
       user.favorites.push(article);
       article.favoritesCount++;
       await this.userRepository.save(user);
@@ -180,12 +183,12 @@ export class ArticleService {
     return article;
   }
 
-  async deleteArticleToFavorites(
+  async deleteArticleFromFavorites(
     slug: string,
-    currentUserId: number,
+    userId: number,
   ): Promise<ArticleEntity> {
     const article = await this.findBySlug(slug);
-    const user = await this.userRepository.findOne(currentUserId, {
+    const user = await this.userRepository.findOne(userId, {
       relations: ['favorites'],
     });
     const articleIndex = user.favorites.findIndex(
